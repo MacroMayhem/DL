@@ -54,7 +54,7 @@ for i in range(n):
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
-plt.savefig('output_img/vanilla_autoencoder.png')
+plt.savefig('../output_img/vanilla_autoencoder.png')
 
 # summarize layers
 print(autoencoder.summary())

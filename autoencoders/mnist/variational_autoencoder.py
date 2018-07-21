@@ -40,10 +40,10 @@ print(z)
 #decoder
 # we instantiate these layers separately so as to reuse them later
 decoder_h = Dense(intermediate_dim, activation='relu')
-decoder_mean = Dense(original_dim, activation='sigmoid')
+decoder_output = Dense(original_dim, activation='sigmoid')
 h_decoded = decoder_h(z)
-x_decoded_mean = decoder_mean(h_decoded)
-print(x_decoded_mean)
+x_decoded_output = decoder_output(h_decoded)
+print(x_decoded_output)
 
 
 #loss
@@ -51,9 +51,9 @@ def vae_loss(x, x_decoded_mean):
  xent_loss = original_dim * objectives.binary_crossentropy(x, x_decoded_mean)
  kl_loss = - 0.5 * K.sum(1 + z_log_var - K.square(z_mean) - K.exp(z_log_var), axis=-1)
  return xent_loss + kl_loss
-vae = Model(x, x_decoded_mean)
+vae = Model(x, x_decoded_output)
 vae.compile(optimizer='rmsprop', loss=vae_loss)
-
+vae.summary()
 
 # train the VAE on MNIST digits
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -70,6 +70,7 @@ vae.fit(x_train, x_train,
 
 # build a model to project inputs on the latent space
 encoder = Model(x, z_mean)
+encoder.summary()
 # display a 2D plot of the digit classes in the latent space
 x_test_encoded = encoder.predict(x_test, batch_size=batch_size)
 plt.figure(figsize=(6, 6))
@@ -81,8 +82,9 @@ plt.savefig('../output_img/vae_latent_plot.png')
 # build a digit generator that can sample from the learned distribution
 decoder_input = Input(shape=(latent_dim,))
 _h_decoded = decoder_h(decoder_input)
-_x_decoded_mean = decoder_mean(_h_decoded)
+_x_decoded_mean = decoder_output(_h_decoded)
 generator = Model(decoder_input, _x_decoded_mean)
+generator.summary()
 # display a 2D manifold of the digits
 n = 15 # figure with 15x15 digits
 digit_size = 28

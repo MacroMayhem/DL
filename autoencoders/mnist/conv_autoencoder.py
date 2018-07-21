@@ -18,9 +18,9 @@ x = UpSampling2D((2, 2),name='mp4')(x)
 decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same',name='h5')(x)
 
 autoencoder = Model(input_img, decoded)
-autoencoder.summary()
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 
+autoencoder.summary()
 
 from keras.datasets import mnist
 import numpy as np
